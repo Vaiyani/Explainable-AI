@@ -3,7 +3,7 @@
 ## Timetable
 | 1st      | 2nd      | 3rd      | 4th      | 5th      | 6th      | Final    |
 |----------|----------|----------|----------|----------|----------|----------|
-| 27\.04\. | 11\.05\. | 25\.05\. | 08\.06\. | 22\.06\. | 06\.07\. | 20\.07\. |
+| [27\.04\.](https://gitlab.lrz.de/nlp-lab-course-ss2020/opinion-mining/opinion-lab-group-1.5/-/blob/master/presentations/2020_04_27.pptx) | 11\.05\. | 25\.05\. | 08\.06\. | 22\.06\. | 06\.07\. | 20\.07\. |
 
 ## Initial Action Items
 - Apply the model on the two provided datasets for aspect extraction on social media comments about organic food
