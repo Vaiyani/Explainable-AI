@@ -1,5 +1,9 @@
 # Opinion Lab Group 1.5
 
+## Group Members
+- @ge39dor (ge39dor@mytum.de)
+- @ga58nav (florian.angermeir@tum.de)
+
 ## Timetable
 |     | 1st      | 2nd      | 3rd      | 4th      | 5th      | 6th      | Final    |
 |-----|:----------:|:----------:|:----------:|:----------:|:----------:|:----------:|:----------:|
