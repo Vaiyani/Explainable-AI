@@ -20,3 +20,4 @@
 - [Paper](https://arxiv.org/pdf/1905.08772.pdf)
 - [Annotated Organic Dataset](https://gitlab.lrz.de/social-rom/organic-dataset/annotated-dataset/-/tree/master/annotated_3rd_round%2Fprocessed%2Ftrain_test_validation%20V0.3)
 - [SemEval 2016 task 5](http://alt.qcri.org/semeval2016/task5/)
+  - Dataset is downloaded [here](https://cloud.lamf.de/s/R4XjpCpfsTBfgL6), Password is `atJXHyrwdfslkjbsaafjl`
