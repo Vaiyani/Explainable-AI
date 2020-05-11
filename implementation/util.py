@@ -27,6 +27,43 @@ def load_multi_label(path_to_text, path_to_labels):
       labels.append(labels_in_line)
   return text, labels
 
+def binarize_to_list(y_pred, classes):
+  """
+  Binarizes the given list of labels according to classes.
+  
+  Each label mentioned in y_pred will correspond to a 1 in the returned list, while each non-mentioned label will be represented by a 0.
+  
+  Parameters:
+  y_pred (list): List of strings containing labels.
+  classes (list): List of all possible labels.
+ 
+  Returns:
+  List: List of len(classes) containing 0 and 1 representing the label indicators.
+  """
+  binary_label = [0]*len(classes)
+  indices = [Classes.index(label) for label in y_pred]
+  for index in indices:
+    binary_label[index] = 1
+  return binary_label
+  
+def binarize_to_matrix(y_pred, classes):
+  """
+  Binarizes the given list of lists of labels according to classes.
+  
+  For each label list in y_pred convert the label list to a binarized list and stack the results.
+  
+  Parameters:
+  y_pred (list): List of list of strings containing labels.
+  classes (list): List of all possible labels.
+ 
+  Returns:
+  List: List of len (y_pred) of lists of len(classes) containing 0 and 1 representing the label indicators.
+  """
+  binary_matrix = []
+  for sample in y_pred:
+    sample_binary = binarize_to_list(sample, classes)
+    binary_matrix.append(sample_binary)
+  return binary_matrix
 
 def parse_data(data_path, file_path1, file_path2, results_path):
   """
