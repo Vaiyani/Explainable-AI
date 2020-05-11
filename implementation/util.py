@@ -1,4 +1,22 @@
 def parse_data(data_path, file_path1, file_path2, results_path):
+  """
+  Parse Dataset for single label training.
+  
+  Take Data from SemEval 2016 Task 5 and parse the XML Format into different files.
+  Each file represents an entity/attribute.
+  The text related to an entity or attribute will we written in that file line by line.
+  
+  If the files already exist they will be move, in order to have an archived version of them.
+  
+  Parameters:
+  data_path (string): Path to the data directory.
+  file_path1 (string): Name of the first SemEval file.
+  file_path2 (string): Name of the second SemEval file.
+  results_path (string): Path to store the results in data_path.
+  
+  Returns:
+  None
+  """
   if file_path1 not in ["/ABSA16_Laptops_Train_SB1_v2.xml", "/ABSA16_Restaurants_Train_SB1_v2.xml"] or \
   file_path2 not in ["/ABSA16_Laptops_Train_SB1_v2.xml", "/ABSA16_Restaurants_Train_SB1_v2.xml"]:
     raise Exception("Unknown File, you need to adjust the parsing process")
@@ -47,6 +65,23 @@ def parse_data(data_path, file_path1, file_path2, results_path):
             file.close()
 
 def parse_multi_label(path_to_file1, path_to_file2, path_to_save):
+  """
+  Parse Dataset for multi label training.
+  
+  Take Data from SemEval 2016 Task 5 and parse the XML Format into two different files.
+  The first file represents the text file.
+  The second file represents the related labels.
+  The text will be written line wise to the text file and the related labels will be written in the second file, also line-wise.
+  This enables the direct mapping from text to label via line number.
+  
+  Parameters:
+  path_to_file1 (string): Name of the first SemEval file.
+  path_to_file2 (string): Name of the second SemEval file.
+  results_path (string): Path to store the two files in data_path.
+  
+  Returns:
+  None
+  """
   try:
     Path(path_to_save).mkdir(parents=True,exist_ok=False)
   except:
@@ -69,7 +104,7 @@ def parse_multi_label(path_to_file1, path_to_file2, path_to_save):
             file.write(text + '\n')
           with open(path_to_save + "/entity-labels.txt", 'a+') as file:
             for entity in entities:
-              # Use @ as delimiter between different entities
+              # Use ; as delimiter between different entities
               file.write(entity + ";")
             file.write("\n")
         
