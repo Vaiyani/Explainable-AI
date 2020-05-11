@@ -1,3 +1,33 @@
+def load_multi_label(path_to_text, path_to_labels):
+  """
+  Loads Multi Label Dataset from 2 Files.
+  
+  Loads the Dataset from the text file containing all the text linewise and the label file containing the related labels (also linewise)
+  
+  Parameters:
+  path_to_text (string): File path to the text File
+  path_to_labels (string): File path to the related labels File
+  
+  Returns:
+  Tuple: List of text, List of related labels
+  """
+  text = []
+  labels = []
+  with open(path_to_text) as f_text:
+    for line in f_text:
+      text.append(line.strip())
+
+  with open(path_to_labels) as f_labels:
+    for line in f_labels:
+      labels_in_line = []
+      labels_temp = line.split(";")
+      for label in labels_temp:
+        if label.strip():
+          labels_in_line.append(label)
+      labels.append(labels_in_line)
+  return text, labels
+
+
 def parse_data(data_path, file_path1, file_path2, results_path):
   """
   Parse Dataset for single label training.
@@ -115,20 +145,3 @@ def parse_multi_label(path_to_file1, path_to_file2, path_to_save):
             for attribute in attributes:
               file.write(attribute + ";")
             file.write("\n")
-
-def load_multi_label(path_to_text, path_to_labels):
-  text = []
-  labels = []
-  with open(path_to_text) as f_text:
-    for line in f_text:
-      text.append(line.strip())
-
-  with open(path_to_labels) as f_labels:
-    for line in f_labels:
-      labels_in_line = []
-      labels_temp = line.split(";")
-      for label in labels_temp:
-        if label.strip():
-          labels_in_line.append(label)
-      labels.append(labels_in_line)
-  return text, labels
