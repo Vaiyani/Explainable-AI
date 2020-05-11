@@ -88,6 +88,25 @@ def predict_multilabel(X_val, clf):
     predicted.append(labels)
   return predicted
 
+def eval_multilabel(true, predicted, method, **kwargs):
+  """
+  A wrapper for applying different multilabel classification metrics to the classification results
+  
+  Example:
+  from sklearn.metrics import f1_score
+  eval_multilabel(true, predicted, f1_score, **{"average": "macro"})
+  
+  Parameters:
+  true (list): List of list of binarized true values (output from binarize_to_matrix).
+  predicted (list): List of list of binarized predicted valued (output from binarize_to_matrix).
+  method (method): A metric method. This could be a self written one, or a imported one like in the example.
+  kwargs (dict): Additional arguments for the metric method, see example for more insights.
+  
+  Returns:
+  Output of the given method
+  """
+  return method(true, predicted, **kwargs)
+
 def parse_data(data_path, file_path1, file_path2, results_path):
   """
   Parse Dataset for single label training.
