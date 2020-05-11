@@ -65,6 +65,29 @@ def binarize_to_matrix(y_pred, classes):
     binary_matrix.append(sample_binary)
   return binary_matrix
 
+def predict_multilabel(X_val, clf):
+  """
+  Basically a wrapper around clf.classify_multilabel.
+  
+  This enables us to write predict_multilabel(X_val, clf) instead of:
+  results = []
+  for x in X_val: 
+     result = clf.classify_multilabel(text)
+     results.append(result)
+  
+  Parameters:
+  X_val (list): List of strings containing the text to apply the multilabel classification for.
+  clf (SS3): The trained classifier for the prediction.
+  
+  Returns:
+  List: List of len(X_val) containing a list of labels per classified sample. So its basically a matrix, that can directly be used in binarize_to_matrix().
+  """
+  predicted = []
+  for text in X_val:
+    labels = clf.classify_multilabel(text)
+    predicted.append(labels)
+  return predicted
+
 def parse_data(data_path, file_path1, file_path2, results_path):
   """
   Parse Dataset for single label training.
