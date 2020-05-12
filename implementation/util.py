@@ -41,7 +41,7 @@ def binarize_to_list(y_pred, classes):
   List: List of len(classes) containing 0 and 1 representing the label indicators.
   """
   binary_label = [0]*len(classes)
-  indices = [Classes.index(label) for label in y_pred]
+  indices = [classes.index(label) for label in y_pred]
   for index in indices:
     binary_label[index] = 1
   return binary_label
