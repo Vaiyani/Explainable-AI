@@ -1,4 +1,131 @@
+def load_multi_label(path_to_text, path_to_labels):
+  """
+  Loads Multi Label Dataset from 2 Files.
+  
+  Loads the Dataset from the text file containing all the text linewise and the label file containing the related labels (also linewise)
+  
+  Parameters:
+  path_to_text (string): File path to the text File
+  path_to_labels (string): File path to the related labels File
+  
+  Returns:
+  Tuple: List of text, List of related labels
+  """
+  text = []
+  labels = []
+  with open(path_to_text) as f_text:
+    for line in f_text:
+      text.append(line.strip())
+
+  with open(path_to_labels) as f_labels:
+    for line in f_labels:
+      labels_in_line = []
+      labels_temp = line.split(";")
+      for label in labels_temp:
+        if label.strip():
+          labels_in_line.append(label)
+      labels.append(labels_in_line)
+  return text, labels
+
+def binarize_to_list(y_pred, classes):
+  """
+  Binarizes the given list of labels according to classes.
+  
+  Each label mentioned in y_pred will correspond to a 1 in the returned list, while each non-mentioned label will be represented by a 0.
+  
+  Parameters:
+  y_pred (list): List of strings containing labels.
+  classes (list): List of all possible labels.
+ 
+  Returns:
+  List: List of len(classes) containing 0 and 1 representing the label indicators.
+  """
+  binary_label = [0]*len(classes)
+  indices = [classes.index(label) for label in y_pred]
+  for index in indices:
+    binary_label[index] = 1
+  return binary_label
+  
+def binarize_to_matrix(y_pred, classes):
+  """
+  Binarizes the given list of lists of labels according to classes.
+  
+  For each label list in y_pred convert the label list to a binarized list and stack the results.
+  
+  Parameters:
+  y_pred (list): List of list of strings containing labels.
+  classes (list): List of all possible labels.
+ 
+  Returns:
+  List: List of len (y_pred) of lists of len(classes) containing 0 and 1 representing the label indicators.
+  """
+  binary_matrix = []
+  for sample in y_pred:
+    sample_binary = binarize_to_list(sample, classes)
+    binary_matrix.append(sample_binary)
+  return binary_matrix
+
+def predict_multilabel(X_val, clf):
+  """
+  Basically a wrapper around clf.classify_multilabel.
+  
+  This enables us to write predict_multilabel(X_val, clf) instead of:
+  results = []
+  for x in X_val: 
+     result = clf.classify_multilabel(text)
+     results.append(result)
+  
+  Parameters:
+  X_val (list): List of strings containing the text to apply the multilabel classification for.
+  clf (SS3): The trained classifier for the prediction.
+  
+  Returns:
+  List: List of len(X_val) containing a list of labels per classified sample. So its basically a matrix, that can directly be used in binarize_to_matrix().
+  """
+  predicted = []
+  for text in X_val:
+    labels = clf.classify_multilabel(text)
+    predicted.append(labels)
+  return predicted
+
+def eval_multilabel(true, predicted, method, **kwargs):
+  """
+  A wrapper for applying different multilabel classification metrics to the classification results
+  
+  Example:
+  from sklearn.metrics import f1_score
+  eval_multilabel(true, predicted, f1_score, **{"average": "macro"})
+  
+  Parameters:
+  true (list): List of list of binarized true values (output from binarize_to_matrix).
+  predicted (list): List of list of binarized predicted valued (output from binarize_to_matrix).
+  method (method): A metric method. This could be a self written one, or a imported one like in the example.
+  kwargs (dict): Additional arguments for the metric method, see example for more insights.
+  
+  Returns:
+  Output of the given method
+  """
+  return method(true, predicted, **kwargs)
+
 def parse_data(data_path, file_path1, file_path2, results_path):
+  """
+  Parse Dataset for single label training.
+  
+  Take Data from SemEval 2016 Task 5 and parse the XML Format into different files.
+  Each file represents an entity/attribute.
+  The text related to an entity or attribute will we written in that file line by line.
+  
+  If the files already exist they will be move, in order to have an archived version of them.
+  
+  Parameters:
+  data_path (string): Path to the data directory.
+  file_path1 (string): Name of the first SemEval file.
+  file_path2 (string): Name of the second SemEval file.
+  results_path (string): Path to store the results in data_path.
+  
+  Returns:
+  None
+  """
   if file_path1 not in ["/ABSA16_Laptops_Train_SB1_v2.xml", "/ABSA16_Restaurants_Train_SB1_v2.xml"] or \
   file_path2 not in ["/ABSA16_Laptops_Train_SB1_v2.xml", "/ABSA16_Restaurants_Train_SB1_v2.xml"]:
     raise Exception("Unknown File, you need to adjust the parsing process")
@@ -47,6 +174,23 @@ def parse_data(data_path, file_path1, file_path2, results_path):
             file.close()
 
 def parse_multi_label(path_to_file1, path_to_file2, path_to_save):
+  """
+  Parse Dataset for multi label training.
+  
+  Take Data from SemEval 2016 Task 5 and parse the XML Format into two different files.
+  The first file represents the text file.
+  The second file represents the related labels.
+  The text will be written line wise to the text file and the related labels will be written in the second file, also line-wise.
+  This enables the direct mapping from text to label via line number.
+  
+  Parameters:
+  path_to_file1 (string): Name of the first SemEval file.
+  path_to_file2 (string): Name of the second SemEval file.
+  results_path (string): Path to store the two files in data_path.
+  
+  Returns:
+  None
+  """
   try:
     Path(path_to_save).mkdir(parents=True,exist_ok=False)
   except:
@@ -69,7 +213,7 @@ def parse_multi_label(path_to_file1, path_to_file2, path_to_save):
             file.write(text + '\n')
           with open(path_to_save + "/entity-labels.txt", 'a+') as file:
             for entity in entities:
-              # Use @ as delimiter between different entities
+              # Use ; as delimiter between different entities
               file.write(entity + ";")
             file.write("\n")
         
@@ -80,20 +224,3 @@ def parse_multi_label(path_to_file1, path_to_file2, path_to_save):
             for attribute in attributes:
               file.write(attribute + ";")
             file.write("\n")
-
-def load_multi_label(path_to_text, path_to_labels):
-  text = []
-  labels = []
-  with open(path_to_text) as f_text:
-    for line in f_text:
-      text.append(line.strip())
-
-  with open(path_to_labels) as f_labels:
-    for line in f_labels:
-      labels_in_line = []
-      labels_temp = line.split(";")
-      for label in labels_temp:
-        if label.strip():
-          labels_in_line.append(label)
-      labels.append(labels_in_line)
-  return text, labels
