@@ -9,6 +9,9 @@
 - @ge39dor (ge39dor@mytum.de)
 - @ga58nav (florian.angermeir@tum.de)
 
+## Final report
+The final report can be found [here](https://gitlab.lrz.de/nlp-lab-course-ss2020/opinion-mining/opinion-lab-group-1.5/-/wikis/home).
+
 ## Initial Action Items
 - Apply the given classifier method for attribute and entity classification on SemEval 2016 task 5 and the organic dataset.
   - The idea for SemEval is to show that the classifier is actually working for the task of attribute/entity classification, since the dataset is well defined. Additionally, it would be interesting to analyze the reasoning of the classification to see which are coherent and which are incoherent attribute/entity classes.
